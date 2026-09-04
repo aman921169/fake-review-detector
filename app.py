@@ -1,7 +1,3 @@
-# app.py
-# Gradio demo for the fake review detector (broad multi-category dataset)
-# Loads saved models instantly instead of retraining
-
 import joblib
 import torch
 from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
@@ -9,11 +5,11 @@ import gradio as gr
 
 print("Loading saved models...")
 
-# ---------- Load baseline ----------
+#load baseline
 baseline_model = joblib.load("baseline_model.joblib")
 vectorizer = joblib.load("vectorizer.joblib")
 
-# ---------- Load BERT ----------
+#load bert
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 tokenizer = DistilBertTokenizer.from_pretrained("./bert_broad_model")
 bert_model = DistilBertForSequenceClassification.from_pretrained("./bert_broad_model")
@@ -22,7 +18,7 @@ bert_model.eval()
 
 print("Models loaded! Launching app...")
 
-# ---------- Prediction function ----------
+
 def predict_review(review_text):
     if not review_text.strip():
         return "Please paste a review first.", "", ""
@@ -50,7 +46,7 @@ def predict_review(review_text):
 
     return baseline_result, bert_result, agreement
 
-# ---------- Build the interface ----------
+
 demo = gr.Interface(
     fn=predict_review,
     inputs=gr.Textbox(lines=6, placeholder="Paste a product review here...", label="Review Text"),

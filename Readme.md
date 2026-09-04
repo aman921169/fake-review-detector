@@ -1,30 +1,77 @@
-Fake Review Detector
+# Fake Review Detector
 
-A machine learning project that detects fake (AI-generated) product reviews, comparing a classic TF-IDF + Logistic Regression baseline against a fine-tuned DistilBERT model.
+A machine learning project that detects whether a product review is human-written or AI-generated.
 
-Includes a live demo (Gradio) where you can paste any review and see predictions from both models side by side.
+The project compares a traditional **TF-IDF + Logistic Regression** model with a fine-tuned **DistilBERT** model to see how much better a transformer performs on this task.
 
-Overview
+## Demo
 
-Online reviews shape purchasing decisions, but a growing share of them are AI-generated rather than written by real customers. This project builds and compares two approaches to detecting this:
+![Fake Review Detector Demo](images/demo.png)
 
-Baseline: TF-IDF vectorization + Logistic Regression
-Fine-tuned transformer: DistilBERT, fine-tuned on labeled review data
+The project includes a **Gradio** interface where you can paste a review and get predictions from both models side by side.
 
-The goal was to understand not just which model performs better, but why, and how much a transformer's contextual understanding actually buys you over a simple word-frequency approach.
+## Dataset
 
-Dataset
+The model was trained on the **Fake Reviews Dataset** from Kaggle.
 
-Fake Reviews Dataset (Kaggle) — 40,432 product reviews across 10 categories (Electronics, Books, Home & Kitchen, Toys, Pet Supplies, and more), labeled as either:
+* 40,432 reviews
+* 10 product categories
+* 20,216 human-written reviews
+* 20,216 computer-generated reviews
 
-OR — Original, human-written review
-CG — Computer-generated (AI-written) review
+Labels:
 
-The dataset is perfectly balanced: 20,216 reviews of each class.
+* `OR` — Original / human-written
+* `CG` — Computer-generated
 
-Results
-Model	Accuracy	Precision (avg)	Recall (avg)
-TF-IDF + Logistic Regression	86.2%	0.86	0.86
-Fine-tuned DistilBERT	98.3%	0.98	0.98
+## Models
 
-Fine-tuning DistilBERT improved accuracy by ~12 percentage points over the baseline — a much larger gap than is typical for tasks like sentiment analysis. This makes sense given what's being detected: AI-generated text has structural and contextual patterns (generic phrasing, unnaturally consistent structure) that a model with real language understanding can pick up on far better than a word-frequency count ever could.
+**Baseline:** TF-IDF + Logistic Regression
+
+**Main model:** Fine-tuned DistilBERT
+
+The baseline gives us a simple reference point, while DistilBERT can use the context and structure of the review rather than just individual words.
+
+## Results
+
+| Model                        |  Accuracy |
+| ---------------------------- | --------: |
+| TF-IDF + Logistic Regression |     86.2% |
+| Fine-tuned DistilBERT        | **98.3%** |
+
+DistilBERT improved the accuracy by about **12 percentage points** over the baseline.
+
+## Running the Project
+
+Install the required packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+Then run:
+
+```bash
+python app.py
+```
+
+The app will open the Gradio interface locally.
+
+## Project Structure
+
+```text
+├── app.py
+├── baseline_broad.py
+├── bert_broad.py
+├── explore_broad.py
+├── fake reviews dataset.csv
+└── README.md
+```
+
+## Why I Made This
+
+I wanted to compare a traditional NLP approach with a transformer model on the same problem and see how much difference contextual language understanding actually makes.
+
+## Limitations
+
+The model was trained on a specific fake-review dataset, so its performance may differ on reviews from other sources or domains.

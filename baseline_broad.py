@@ -1,7 +1,3 @@
-# baseline_broad.py
-# Baseline model on the broader multi-category fake reviews dataset
-# Saves the trained model + vectorizer so the app doesn't have to retrain every time
-
 import pandas as pd
 import joblib
 from sklearn.model_selection import train_test_split
@@ -40,7 +36,7 @@ print()
 print("Confusion matrix:")
 print(confusion_matrix(y_test, y_pred))
 
-# ---------- Save the trained model + vectorizer ----------
+#save model and vectorizer
 joblib.dump(model, "baseline_model.joblib")
 joblib.dump(vectorizer, "vectorizer.joblib")
 print()

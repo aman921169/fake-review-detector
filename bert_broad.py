@@ -1,7 +1,3 @@
-# bert_broad.py
-# Fine-tunes DistilBERT on the full 40k multi-category dataset
-# Saves the model afterward so the app can load it instantly
-
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -10,7 +6,7 @@ import torch
 from torch.utils.data import Dataset
 from transformers import DistilBertTokenizer, DistilBertForSequenceClassification, Trainer, TrainingArguments
 
-# ---------- Load data ----------
+#load data
 df = pd.read_csv("fake reviews dataset.csv")
 df = df.dropna(subset=["text_"])
 
@@ -28,7 +24,7 @@ y_test_numeric = y_test.map(label_map).tolist()
 print("Training set size:", len(X_train))
 print("Test set size:", len(X_test))
 
-# ---------- Tokenize ----------
+#tokenize
 tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
 
 train_encodings = tokenizer(X_train.tolist(), truncation=True, padding=True, max_length=256)
@@ -48,7 +44,7 @@ class ReviewDataset(Dataset):
 train_dataset = ReviewDataset(train_encodings, y_train_numeric)
 test_dataset = ReviewDataset(test_encodings, y_test_numeric)
 
-# ---------- Load model ----------
+#load model
 model = DistilBertForSequenceClassification.from_pretrained("distilbert-base-uncased", num_labels=2)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
@@ -82,7 +78,7 @@ print()
 print("Starting training on", device, "... this will take a while, grab a coffee")
 trainer.train()
 
-# ---------- Final evaluation ----------
+#evaluation 
 predictions = trainer.predict(test_dataset)
 y_pred = np.argmax(predictions.predictions, axis=1)
 
@@ -95,7 +91,7 @@ print()
 print("Confusion matrix:")
 print(confusion_matrix(y_test_numeric, y_pred))
 
-# ---------- Save the trained model + tokenizer ----------
+#saving trained model and tokenizer
 model.save_pretrained("./bert_broad_model")
 tokenizer.save_pretrained("./bert_broad_model")
 print()
